@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MovieProxy - Stream Limpio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="#6366f1"/>
+          <path d="M8 12l8-4 8 4v8l-8 4-8-4V12z" stroke="white" stroke-width="2" fill="none"/>
+          <path d="M8 12l8 4 8-4M8 20l8 4 8-4" stroke="white" stroke-width="2" opacity="0.6"/>
+        </svg>
+        <h1>MovieProxy</h1>
+      </div>
+      <p class="tagline">Elimina anuncios de Streamwish, Voy y más</p>
+    </header>
+
+    <!-- Input Section -->
+    <section class="input-section" id="inputSection">
+      <div class="input-container">
+        <input 
+          type="text" 
+          id="streamUrl" 
+          placeholder="Pega aquí la URL de Streamwish, Voy, etc..."
+          autocomplete="off"
+        >
+        <button id="loadBtn" class="btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Reproducir
+        </button>
+      </div>
+      <p class="hint">Soporta: streamwish.com, voy.xyz, filemoon.sx, embedwish.com</p>
+    </section>
+
+    <!-- Loading State -->
+    <div class="loading" id="loading" hidden>
+      <div class="spinner"></div>
+      <p>Desofuscando y limpiando stream...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error" id="error" hidden>
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p id="errorText">Error al cargar el stream</p>
+      <button class="btn-secondary" onclick="resetPlayer()">Intentar otra URL</button>
+    </div>
+
+    <!-- Player Section -->
+    <section class="player-section" id="playerSection" hidden>
+      <div class="player-container">
+        <video id="video" poster="" playsinline></video>
+        
+        <!-- Custom Controls -->
+        <div class="controls" id="controls">
+          <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="progress-handle" id="progressHandle"></div>
+          </div>
+          
+          <div class="controls-row">
+            <div class="controls-left">
+              <button class="control-btn" id="playPauseBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" id="playIcon"/>
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" id="pauseIcon" style="display:none"/>
+                </svg>
+              </button>
+              
+              <div class="volume-container">
+                <button class="control-btn" id="muteBtn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" id="volumeHigh"></path>
+                    <line x1="23" y1="9" x2="17" y2="15" id="volumeMute" style="display:none"></line>
+                    <line x1="17" y1="9" x2="23" y2="15" id="volumeMute2" style="display:none"></line>
+                  </svg>
+                </button>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100">
+              </div>
+              
+              <span class="time" id="timeDisplay">0:00 / 0:00</span>
+            </div>
+            
+            <div class="controls-right">
+              <select class="quality-selector" id="qualitySelector" hidden>
+                <option value="auto">Auto</option>
+              </select>
+              
+              <button class="control-btn" id="fullscreenBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Big Play Button (overlay) -->
+        <div class="big-play" id="bigPlay">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="white">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="stream-info" id="streamInfo">
+        <h2 id="videoTitle">Sin título</h2>
+        <button class="btn-secondary" onclick="resetPlayer()">Nueva URL</button>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+      <div class="feature">
+        <div class="feature-icon">🛡️</div>
+        <h3>Sin Anuncios</h3>
+        <p>Elimina completamente la publicidad del stream</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <h3>Rápido</h3>
+        <p>Desofuscación en tiempo real</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <h3>Privado</h3>
+        <p>Tu tráfico nunca se almacena</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
+  <script src="/player.js"></script>
+  <script src="/app.js"></script>
+</body>
+  </html>

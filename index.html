@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MovieLimpio - Stream sin anuncios</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#00b4d8"/><path d="M12 10L22 16L12 22V10Z" fill="white"/></svg>
+        <h1>MovieLimpio</h1>
+      </div>
+      <p class="subtitle">Streaming limpio, sin anuncios, sin complicaciones</p>
+    </header>
+    <main class="main">
+      <section class="input-section">
+        <div class="input-group">
+          <input type="url" id="urlInput" placeholder="Pega el enlace del proveedor (Streamwish, VOE, FileLions...)" autocomplete="off" spellcheck="false" />
+          <button id="extractBtn" class="btn-primary">
+            <span class="btn-text">Extraer Stream</span>
+            <span class="btn-loader" style="display:none"><svg class="spinner" width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="32" stroke-linecap="round"/></svg></span>
+          </button>
+        </div>
+        <div class="supported-sites">
+          <span>Proveedores soportados:</span>
+          <div class="tags">
+            <span class="tag">StreamWish</span><span class="tag">StreamWish.to</span><span class="tag">SWishs</span>
+            <span class="tag">VOE.sx</span><span class="tag">VOE.la</span><span class="tag">FileLions</span>
+            <span class="tag">+ todos sus espejos</span>
+          </div>
+        </div>
+      </section>
+      <div id="status" class="status" style="display:none"></div>
+      <section id="result" class="result-section" style="display:none">
+        <div class="result-header"><h2>Stream Listo</h2><span class="provider-badge" id="providerBadge">StreamWish</span></div>
+        <div class="player-wrapper">
+          <video id="videoPlayer" controls autoplay playsinline></video>
+          <div class="player-controls-overlay"><div class="player-info"><span class="quality-info" id="qualityInfo">HD</span><span class="status-dot" id="statusDot"></span><span class="status-text" id="statusText">Conectando...</span></div></div>
+        </div>
+        <div class="embed-section">
+          <h3>Link Embed (iframe)</h3>
+          <div class="embed-url-group"><input type="text" id="embedUrlInput" readonly /><button class="btn-copy" id="copyEmbedBtn" onclick="copyEmbedUrl()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar</button></div>
+          <div class="embed-preview"><p class="hint">Inserta este iframe en tu página:</p><code id="embedCode">&lt;iframe src="..." width="100%" height="480" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;</code><button class="btn-copy" onclick="copyEmbedCode()">Copiar código iframe</button></div>
+        </div>
+        <div class="stream-info"><h3>Información del Stream</h3><div class="info-grid"><div class="info-item"><span class="label">URL Original</span><span class="value" id="originalUrl">-</span></div><div class="info-item"><span class="label">URL Directa M3U8</span><span class="value" id="directUrl">-</span></div><div class="info-item"><span class="label">Estado</span><span class="value live" id="streamStatus">En vivo</span></div></div></div>
+      </section>
+      <section class="how-it-works">
+        <h2>Cómo funciona</h2>
+        <div class="steps">
+          <div class="step"><div class="step-number">1</div><h4>Pega el enlace</h4><p>Copia la URL del video</p></div>
+          <div class="step"><div class="step-number">2</div><h4>Extracción automática</h4><p>Proxy descarga y desofusca el código</p></div>
+          <div class="step"><div class="step-number">3</div><h4>Filtro de anuncios</h4><p>Limpia el playlist M3U8</p></div>
+          <div class="step"><div class="step-number">4</div><h4>Reproduce limpio</h4><p>Video sin anuncios, controles minimalistas</p></div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer"><p>MovieLimpio — Proxy de streams para fines educativos</p></footer>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
